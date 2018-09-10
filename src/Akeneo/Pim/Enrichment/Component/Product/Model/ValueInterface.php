@@ -14,21 +14,6 @@ use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
 interface ValueInterface
 {
     /**
-     * Named constructor for non scopable, non localizable value
-     */
-    public static function scopableValue(string $attributeCode, $data, string $scopeCode): ValueInterface;
-
-    /**
-     * Named constructor for localizable, non scopable value
-     */
-    public static function localizableValue(string $attributeCode, $data, string $localeCode): ValueInterface;
-
-    /**
-     * Named constructor for scopable and localizable value
-     */
-    public static function scopableLocalizableValue(string $attributeCode, $data, string $scopeCode, string $localeCode): ValueInterface;
-
-    /**
      * Get data
      *
      * @return mixed

@@ -20,25 +20,15 @@ class ReferenceDataCollectionValue extends AbstractValue implements
     /** @var ReferenceDataInterface[] */
     protected $data;
 
-    /**
-     * @param AttributeInterface       $attribute
-     * @param string                   $channel
-     * @param string                   $locale
-     * @param ReferenceDataInterface[] $data
-     */
-    public function __construct(AttributeInterface $attribute, $channel, $locale, array $data = [])
+    protected function __construct(string $attributeCode, ?array $data = [], ?string $scopeCode, ?string $localeCode)
     {
-        $this->setAttribute($attribute);
-        $this->setScope($channel);
-        $this->setLocale($locale);
-
-        $this->data = $data;
+        parent::__construct($attributeCode, $data, $scopeCode, $localeCode);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getData()
+    public function getData(): ?array
     {
         return $this->data;
     }
@@ -46,26 +36,17 @@ class ReferenceDataCollectionValue extends AbstractValue implements
     /**
      * {@inheritdoc}
      */
-    public function getReferenceDataCodes()
+    public function getReferenceDataCodes() : array
     {
-        $options = [];
-        foreach ($this->data as $option) {
-            $options[] = $option->getCode();
-        }
-
-        return $options;
+        return $this->data !== null ? $this->data : [];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function __toString()
+    public function __toString(): string
     {
-        $codes = array_map(function ($option) {
-            return (string) $option;
-        }, $this->data);
-
-        return implode(', ', $codes);
+        return $this->data !== null ? implode(', ', $codes) : '';
     }
 
     /**

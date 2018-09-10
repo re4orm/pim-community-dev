@@ -5,7 +5,7 @@ namespace Akeneo\Pim\Enrichment\Component\Product\Value;
 use Akeneo\Pim\Enrichment\Component\Product\Model\AbstractValue;
 use Akeneo\Pim\Enrichment\Component\Product\Model\PriceCollectionInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ValueInterface;
-use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
+use Akeneo\Pim\Enrichment\Component\Product\Model\ProductPriceInterface;
 
 /**
  * Product value for "pim_catalog_price_collection" attribute type
@@ -20,28 +20,21 @@ class PriceCollectionValue extends AbstractValue implements PriceCollectionValue
     protected $data;
 
     /**
-     * @param AttributeInterface            $attribute
-     * @param string                        $channel
-     * @param string                        $locale
-     * @param PriceCollectionInterface|null $data
+     * {@inheritdoc}
      */
-    public function __construct(
-        AttributeInterface $attribute,
-        $channel,
-        $locale,
-        PriceCollectionInterface $data = null
+    protected function __construct(
+        string $attributeCode,
+        ?PriceCollectionInterface $data,
+        ?string $scopeCode,
+        ?string $localeCode
     ) {
-        $this->setAttribute($attribute);
-        $this->setScope($channel);
-        $this->setLocale($locale);
-
-        $this->data = $data;
+        parent::__construct($attributeCode, $data, $scopeCode, $localeCode);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getData()
+    public function getData(): ?PriceCollectionInterface
     {
         return $this->data;
     }
@@ -51,7 +44,7 @@ class PriceCollectionValue extends AbstractValue implements PriceCollectionValue
      *
      * @return PriceCollectionInterface|null
      */
-    public function getPrice($currency)
+    public function getPrice(string $currency): ?ProductPriceInterface
     {
         foreach ($this->data as $price) {
             if ($price->getCurrency() === $currency) {
@@ -65,7 +58,7 @@ class PriceCollectionValue extends AbstractValue implements PriceCollectionValue
     /**
      * {@inheritdoc}
      */
-    public function hasData()
+    public function hasData(): bool
     {
         foreach ($this->data as $price) {
             if (null !== $price->getData()) {
@@ -79,7 +72,7 @@ class PriceCollectionValue extends AbstractValue implements PriceCollectionValue
     /**
      * {@inheritdoc}
      */
-    public function __toString()
+    public function __toString(): string
     {
         $options = [];
         foreach ($this->data as $price) {
@@ -94,11 +87,11 @@ class PriceCollectionValue extends AbstractValue implements PriceCollectionValue
     /**
      * {@inheritdoc}
      */
-    public function isEqual(ValueInterface $value)
+    public function isEqual(ValueInterface $value): bool
     {
         if (!$value instanceof PriceCollectionValueInterface ||
-            $value->getLocale() !== $this->getLocale() ||
-            $value->getScope() !== $this->getScope()) {
+            $value->getLocaleCode() !== $this->getLocaleCode() ||
+            $value->getScopeCode() !== $this->getScopeCode()) {
             return false;
         }
 

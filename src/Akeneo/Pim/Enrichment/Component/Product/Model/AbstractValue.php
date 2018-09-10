@@ -95,7 +95,7 @@ abstract class AbstractValue implements ValueInterface
     /**
      * {@inheritdoc}
      */
-    abstract public function isEqual(ValueInterface $value);
+    abstract public function isEqual(ValueInterface $value): bool;
 
     /**
      * {@inheritdoc}
