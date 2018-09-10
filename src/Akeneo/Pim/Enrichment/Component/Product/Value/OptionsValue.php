@@ -23,6 +23,9 @@ class OptionsValue extends AbstractValue implements OptionsValueInterface
      */
     protected function __construct(string $attributeCode, ?array $data, ?string $scopeCode, ?string $localeCode)
     {
+        if (null === $data) {
+            $data = [];
+        }
         parent::__construct($attributeCode, $data, $scopeCode, $localeCode);
     }
 
@@ -47,11 +50,7 @@ class OptionsValue extends AbstractValue implements OptionsValueInterface
      */
     public function getOptionCodes(): array
     {
-        if (null === $this->data) {
-            return [];
-        } else {
-            return $this->data;
-        }
+        return $this->data;
     }
 
     /**

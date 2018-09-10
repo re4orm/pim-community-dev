@@ -9,6 +9,7 @@
 - PIM-7506: Cache default views and columns on the product grid
 - TIP-879: Uses utf8mb4 as encoding for MySQL instead of the less efficient utf8
 - Centralizes technical requirements checks to reuse them on standard edition
+- TIP-883: In order to have a clean and independant product aggregate, ProductValue only provides attribute code and no more direct attribute access.
 
 ## Enhancements
 
@@ -16,6 +17,9 @@
 
 ## BC breaks
 
+- `AbstractValue->getAttribute()` has been replaced by `AbstractValue->getAttributeCode()`. You will need to inject the AttributeRepository in your service if you need to access the full Attribute object related to the provided attribute code.
+- `AbstractValue->getLocale()` has been renamed to `AbstractValue->getLocaleCode()` to better represent its behaviour
+- `AbstractValue->getScope()` has been renamed to `AbstractValue->getScopeCode()` to better represent its behaviour
 - MySQL charset for Akeneo is now utf8mb4, instead of the flawed utf8. If you have custom table, you can convert them with `ALTER TABLE my_custom_table CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`. For Akeneo native tables, the migration scripts apply the conversion.
 - Move `Pim\Bundle\ReferenceDataBundle\DataGrid\Extension\Sorter\ReferenceDataSorter` to `Oro\Bundle\PimDataGridBundle\Extension\Sorter\Produc\ReferenceDataSorter`
 - Move `Pim\Bundle\ReferenceDataBundle\DataGrid\Normalizer\ReferenceDataCollectionNormalizer` to `Oro\Bundle\PimDataGridBundle\Normalizer\Product\ReferenceDataCollectionNormalizer`

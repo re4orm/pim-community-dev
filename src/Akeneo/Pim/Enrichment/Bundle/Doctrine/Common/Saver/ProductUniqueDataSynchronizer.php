@@ -7,7 +7,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductUniqueDataInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ValueInterface;
 use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
-use Akeneo\Pim\Structure\Component\Repository\AttributeRepositoryInterface;
+use Akeneo\Tool\Component\StorageUtils\Repository\CachedObjectRepositoryInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
@@ -27,10 +27,10 @@ class ProductUniqueDataSynchronizer
     /** @var ProductUniqueDataFactory */
     protected $factory;
 
-    /** @var AttributeRepositoryInterface */
+    /** @var CachedObjectRepositoryInterface */
     protected $attributeRepository;
 
-    public function __construct(ProductUniqueDataFactory $factory, AttributeRepositoryInterface $attributeRepository)
+    public function __construct(ProductUniqueDataFactory $factory, CachedObjectRepositoryInterface $attributeRepository)
     {
         $this->factory = $factory;
         $this->attributeRepository = $attributeRepository;
@@ -162,7 +162,7 @@ class ProductUniqueDataSynchronizer
 
         foreach ($product->getValues() as $value) {
             $attribute = $this->attributeRepository->findOneByIdentifier($value->getAttributeCode());
-            if ($attribute->isUnique()) {
+            if (null !== $attribute && $attribute->isUnique()) {
                 $uniqueData[] = $this->factory->create($product, $attribute, $value->__toString());
             }
         }

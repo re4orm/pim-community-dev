@@ -70,7 +70,7 @@ class OptionsValueSpec extends ObjectBehavior
     ) {
         $this->beConstructedThrough(
             'scopableLocalizableValue',
-            ['my_options', [], 'ecommerce', 'en_US']
+            ['my_options', null, 'ecommerce', 'en_US']
         );
 
         $sameOptionsValue->getLocaleCode()->willReturn('en_US');

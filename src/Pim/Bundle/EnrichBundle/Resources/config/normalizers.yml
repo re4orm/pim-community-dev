@@ -131,6 +131,7 @@ services:
             - '@pim_catalog.completeness.calculator'
             - '@pim_catalog.doctrine.query.find_variant_product_completeness'
             - '@pim_catalog.product_models.image_as_label'
+            - '@pim_catalog.repository.cached_attribute_option'
 
     pim_enrich.normalizer.variant_navigation:
         class: '%pim_enrich.normalizer.variant_navigation.class%'

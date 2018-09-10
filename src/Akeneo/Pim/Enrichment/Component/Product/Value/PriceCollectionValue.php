@@ -4,8 +4,8 @@ namespace Akeneo\Pim\Enrichment\Component\Product\Value;
 
 use Akeneo\Pim\Enrichment\Component\Product\Model\AbstractValue;
 use Akeneo\Pim\Enrichment\Component\Product\Model\PriceCollectionInterface;
-use Akeneo\Pim\Enrichment\Component\Product\Model\ValueInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductPriceInterface;
+use Akeneo\Pim\Enrichment\Component\Product\Model\ValueInterface;
 
 /**
  * Product value for "pim_catalog_price_collection" attribute type
@@ -74,14 +74,14 @@ class PriceCollectionValue extends AbstractValue implements PriceCollectionValue
      */
     public function __toString(): string
     {
-        $options = [];
+        $priceStrings = [];
         foreach ($this->data as $price) {
             if (null !== $price->getData()) {
-                $options[] = sprintf('%.2F %s', $price->getData(), $price->getCurrency());
+                $priceStrings[] = sprintf('%.2F %s', $price->getData(), $price->getCurrency());
             }
         }
 
-        return implode(', ', $options);
+        return implode(', ', $priceStrings);
     }
 
     /**

@@ -65,14 +65,14 @@ class FilterLocaleValueSubscriberTest extends TestCase
     {
         $data = [
             'name_current'               => $this->getProductValueMock(
-                $this->getAttributeMock(),
+                'name_current',
                 self::CURRENT_LOCALE
             ),
             'name_other'                 => $this->getProductValueMock(
-                $this->getAttributeMock(),
+                'name_other',
                 self::OTHER_LOCALE
             ),
-            'not_localizable_attribute' => $this->getProductValueMock($this->getAttributeMock(false), null),
+            'not_localizable_attribute' => $this->getProductValueMock('not_localized_attribute', null),
         ];
 
         $form = $this->getFormMock();
@@ -152,17 +152,27 @@ class FilterLocaleValueSubscriberTest extends TestCase
      *
      * @return ValueInterface
      */
-    private function getProductValueMock($attribute, $locale)
+    private function getProductValueMock($attributeCode, $locale)
     {
         $value = $this->createMock(ValueInterface::class);
 
         $value->expects($this->any())
-            ->method('getAttribute')
-            ->will($this->returnValue($attribute));
+            ->method('getAttributeCode')
+            ->will($this->returnValue($attributeCode));
 
         $value->expects($this->any())
-            ->method('getLocale')
+            ->method('getLocaleCode')
             ->will($this->returnValue($locale));
+
+        if (null !== $locale) {
+            $value->expects($this->any())
+                ->method('isLocalizable')
+                ->will($this->returnValue(true));
+        } else {
+            $value->expects($this->any())
+                ->method('isLocalizable')
+                ->will($this->returnValue(false));
+        }
 
         return $value;
     }

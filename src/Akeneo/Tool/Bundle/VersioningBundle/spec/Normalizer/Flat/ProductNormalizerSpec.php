@@ -10,8 +10,6 @@ use PhpSpec\ObjectBehavior;
 use Akeneo\Pim\Enrichment\Bundle\Filter\CollectionFilterInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductAssociation;
 use Akeneo\Pim\Structure\Component\Model\AssociationTypeInterface;
-use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
-use Akeneo\Pim\Structure\Component\Model\AttributeOptionInterface;
 use Akeneo\Pim\Structure\Component\Model\FamilyInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\GroupInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
@@ -53,18 +51,16 @@ class ProductNormalizerSpec extends ObjectBehavior
         $filter,
         $serializer,
         ProductInterface $product,
-        AttributeInterface $skuAttribute,
         ValueInterface $sku,
         ValueCollectionInterface $values,
         FamilyInterface $family,
         ProductModelInterface $parent
     ) {
         $family->getCode()->willReturn('shoes');
-        $skuAttribute->getCode()->willReturn('sku');
-        $skuAttribute->getType()->willReturn('pim_catalog_identifier');
-        $skuAttribute->isLocalizable()->willReturn(false);
-        $skuAttribute->isScopable()->willReturn(false);
-        $sku->getAttribute()->willReturn($skuAttribute);
+
+        $sku->getAttributeCode()->willReturn('sku');
+        $sku->isLocalizable()->willReturn(false);
+        $sku->isScopable()->willReturn(false);
         $sku->getData()->willReturn('sku-001');
 
         $product->isVariant()->willReturn(true);
@@ -97,18 +93,16 @@ class ProductNormalizerSpec extends ObjectBehavior
     function it_normalizes_product(
         $filter,
         ProductInterface $product,
-        AttributeInterface $skuAttribute,
         ValueInterface $sku,
         ValueCollectionInterface $values,
         FamilyInterface $family,
         $serializer
     ) {
         $family->getCode()->willReturn('shoes');
-        $skuAttribute->getCode()->willReturn('sku');
-        $skuAttribute->getType()->willReturn('pim_catalog_identifier');
-        $skuAttribute->isLocalizable()->willReturn(false);
-        $skuAttribute->isScopable()->willReturn(false);
-        $sku->getAttribute()->willReturn($skuAttribute);
+
+        $sku->getAttributeCode()->willReturn('sku');
+        $sku->isLocalizable()->willReturn(false);
+        $sku->isScopable()->willReturn(false);
         $sku->getData()->willReturn('sku-001');
 
         $product->isVariant()->willReturn(false);
@@ -139,7 +133,6 @@ class ProductNormalizerSpec extends ObjectBehavior
     function it_normalizes_product_with_associations(
         $filter,
         ProductInterface $product,
-        AttributeInterface $skuAttribute,
         ValueInterface $sku,
         ProductAssociation $myCrossSell,
         AssociationTypeInterface $crossSell,
@@ -156,11 +149,10 @@ class ProductNormalizerSpec extends ObjectBehavior
         $serializer
     ) {
         $family->getCode()->willReturn('shoes');
-        $skuAttribute->getCode()->willReturn('sku');
-        $skuAttribute->getType()->willReturn('pim_catalog_identifier');
-        $skuAttribute->isLocalizable()->willReturn(false);
-        $skuAttribute->isScopable()->willReturn(false);
-        $sku->getAttribute()->willReturn($skuAttribute);
+
+        $sku->getAttributeCode()->willReturn('sku');
+        $sku->isLocalizable()->willReturn(false);
+        $sku->isScopable()->willReturn(false);
         $sku->getData()->willReturn('sku-001');
 
         $crossSell->getCode()->willReturn('cross_sell');
@@ -173,10 +165,12 @@ class ProductNormalizerSpec extends ObjectBehavior
         $associatedGroup1->getCode()->willReturn('associated_group1');
         $associatedGroup2->getCode()->willReturn('associated_group2');
         $myUpSell->getGroups()->willReturn([$associatedGroup1, $associatedGroup2]);
-        $skuAssocProduct1->getAttribute()->willReturn($skuAttribute);
-        $skuAssocProduct2->getAttribute()->willReturn($skuAttribute);
+
+        $skuAssocProduct1->getAttributeCode()->willReturn('sku');
+        $skuAssocProduct2->getAttributeCode()->willReturn('sku');
         $skuAssocProduct1->__toString()->willReturn('sku_assoc_product1');
         $skuAssocProduct2->__toString()->willReturn('sku_assoc_product2');
+
         $associatedProduct1->getIdentifier()->willReturn($skuAssocProduct1);
         $associatedProduct2->getIdentifier()->willReturn($skuAssocProduct2);
         $myUpSell->getProducts()->willReturn([$associatedProduct1, $associatedProduct2]);
@@ -227,28 +221,22 @@ class ProductNormalizerSpec extends ObjectBehavior
         $filter,
         $serializer,
         ProductInterface $product,
-        AttributeInterface $skuAttribute,
-        AttributeInterface $colorsAttribute,
         ValueInterface $sku,
         ValueInterface $colors,
-        AttributeOptionInterface $red,
-        AttributeOptionInterface $blue,
         ValueCollectionInterface $values,
         FamilyInterface $family
     ) {
         $family->getCode()->willReturn('shoes');
-        $skuAttribute->getCode()->willReturn('sku');
-        $skuAttribute->getType()->willReturn('pim_catalog_identifier');
-        $skuAttribute->isLocalizable()->willReturn(false);
-        $skuAttribute->isScopable()->willReturn(false);
-        $sku->getAttribute()->willReturn($skuAttribute);
+
+        $sku->getAttributeCode()->willReturn('sku');
+        $sku->isLocalizable()->willReturn(false);
+        $sku->isScopable()->willReturn(false);
         $sku->getData()->willReturn('sku-001');
 
-        $colorsAttribute->getCode()->willReturn('colors');
-        $colorsAttribute->isLocalizable()->willReturn(false);
-        $colorsAttribute->isScopable()->willReturn(false);
-        $colors->getAttribute()->willReturn($colorsAttribute);
-        $colors->getData()->willReturn([$red, $blue]);
+        $colors->getAttributeCode()->willReturn('color');
+        $colors->isLocalizable()->willReturn(false);
+        $colors->isScopable()->willReturn(false);
+        $colors->getData()->willReturn(['red', 'blue']);
 
         $product->isVariant()->willReturn(false);
         $product->getIdentifier()->willReturn($sku);
@@ -282,7 +270,6 @@ class ProductNormalizerSpec extends ObjectBehavior
     function it_normalizes_product_with_price(
         $filter,
         ProductInterface $product,
-        AttributeInterface $priceAttribute,
         ValueInterface $price,
         Collection $prices,
         ValueCollectionInterface $values,
@@ -291,13 +278,11 @@ class ProductNormalizerSpec extends ObjectBehavior
         SerializerInterface $serializer
     ) {
         $family->getCode()->willReturn('shoes');
-        $priceAttribute->getCode()->willReturn('price');
-        $priceAttribute->getType()->willReturn('pim_catalog_price_collection');
-        $priceAttribute->isLocalizable()->willReturn(false);
-        $priceAttribute->isScopable()->willReturn(false);
 
-        $price->getAttribute()->willReturn($priceAttribute);
-        $price->getData()->willReturn(null);
+        $price->getAttributeCode()->willReturn('price');
+        $price->isLocalizable()->willReturn(false);
+        $price->isScopable()->willReturn(false);
+        $price->getData()->willReturn('sku-001');
 
         $productPrice->getData()->willReturn("356.00");
         $productPrice->getCurrency()->willReturn("EUR");

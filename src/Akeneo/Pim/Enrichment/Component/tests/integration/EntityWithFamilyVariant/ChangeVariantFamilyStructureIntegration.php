@@ -5,7 +5,6 @@ namespace Akeneo\Pim\Enrichment\Component\tests\integration\EntityWithFamilyVari
 use Akeneo\Test\Integration\TestCase;
 use Akeneo\Test\IntegrationTestsBundle\Jobs\JobExecutionObserver;
 use Akeneo\Test\IntegrationTestsBundle\Launcher\JobLauncher;
-use Akeneo\Pim\Structure\Component\Model\AttributeOptionInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ValueInterface;
 
 /**
@@ -270,8 +269,8 @@ class ChangeVariantFamilyStructureIntegration extends TestCase
         $value = $product->getValuesForVariation()->getByCodes('material');
 
         $this->assertInstanceOf(ValueInterface::class, $value);
-        $this->assertInstanceOf(AttributeOptionInterface::class, $value->getData());
-        $this->assertSame('[leather]', $value->getData()->__toString());
+        $this->assertThat($value->getData(), $this->isType('string'));
+        $this->assertSame('leather', $value->getData());
 
         $this->assertCount(
             1,

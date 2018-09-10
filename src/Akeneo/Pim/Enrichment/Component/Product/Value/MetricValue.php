@@ -33,10 +33,7 @@ class MetricValue extends AbstractValue implements MetricValueInterface
         return $this->data;
     }
 
-    /**
-     * @return float
-     */
-    public function getAmount(): ?float
+    public function getAmount(): ?string
     {
         return $this->data->getData();
     }

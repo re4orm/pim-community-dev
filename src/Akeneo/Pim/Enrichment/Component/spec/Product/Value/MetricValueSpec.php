@@ -20,9 +20,9 @@ class MetricValueSpec extends ObjectBehavior
     {
         $this->beConstructedThrough('scopableLocalizableValue', ['my_metric', $metric, 'ecommerce', 'en_US']);
 
-        $metric->getData()->willReturn(12);
+        $metric->getData()->willReturn("12");
 
-        $this->getAmount()->shouldReturn(12.0);
+        $this->getAmount()->shouldReturn("12");
     }
 
     function it_returns_unit_of_metric(MetricInterface $metric)

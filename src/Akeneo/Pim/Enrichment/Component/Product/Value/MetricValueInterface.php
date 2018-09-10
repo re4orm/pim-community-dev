@@ -16,7 +16,7 @@ interface MetricValueInterface extends ValueInterface
 {
     public function getData(): ?MetricInterface;
 
-    public function getAmount(): ?float;
+    public function getAmount(): ?string;
 
     public function getUnit(): ?string;
 }

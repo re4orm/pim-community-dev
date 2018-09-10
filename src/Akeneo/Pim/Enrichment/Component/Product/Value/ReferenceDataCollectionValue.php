@@ -22,6 +22,9 @@ class ReferenceDataCollectionValue extends AbstractValue implements
 
     protected function __construct(string $attributeCode, ?array $data = [], ?string $scopeCode, ?string $localeCode)
     {
+        if (null === $data) {
+            $data = [];
+        }
         parent::__construct($attributeCode, $data, $scopeCode, $localeCode);
     }
 
@@ -38,7 +41,7 @@ class ReferenceDataCollectionValue extends AbstractValue implements
      */
     public function getReferenceDataCodes() : array
     {
-        return $this->data !== null ? $this->data : [];
+        return $this->data;
     }
 
     /**
@@ -46,12 +49,7 @@ class ReferenceDataCollectionValue extends AbstractValue implements
      */
     public function __toString(): string
     {
-        $refDataStrings = [];
-        foreach ($this->data as $refDataCode) {
-            $refDataStrings[] = '['.$refDataCode.']';
-        }
-
-        return implode(', ', $refDataStrings);
+        return implode(', ', $this->data);
     }
 
     /**
@@ -68,24 +66,7 @@ class ReferenceDataCollectionValue extends AbstractValue implements
         $comparedRefDataCollection = $value->getData();
         $thisRefDataCollection = $this->getData();
 
-        if (count($comparedRefDataCollection) !== count($thisRefDataCollection)) {
-            return false;
-        }
-
-        foreach ($comparedRefDataCollection as $comparedRefData) {
-            $refDataFound = false;
-            foreach ($thisRefDataCollection as $thisRefData) {
-                if ($comparedRefData->getCode() === $thisRefData->getCode()) {
-                    $refDataFound = true;
-                    break;
-                }
-            }
-
-            if (!$refDataFound) {
-                return false;
-            }
-        }
-
-        return true;
+        return count(array_diff($thisRefDataCollection, $comparedRefDataCollection)) === 0 &&
+            count(array_diff($comparedRefDataCollection, $thisRefDataCollection)) === 0;
     }
 }

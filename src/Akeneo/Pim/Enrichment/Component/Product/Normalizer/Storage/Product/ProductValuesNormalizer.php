@@ -26,7 +26,7 @@ class ProductValuesNormalizer implements NormalizerInterface, SerializerAwareInt
         $result = [];
         foreach ($values as $value) {
             $normalizedValue = $this->serializer->normalize($value, $format, $context);
-            $attributeCode = $value->getAttribute()->getCode();
+            $attributeCode = $value->getAttributeCode();
 
             if (!isset($result[$attributeCode])) {
                 $result[$attributeCode] = [];

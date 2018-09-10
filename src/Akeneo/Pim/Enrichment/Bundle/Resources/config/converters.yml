@@ -7,3 +7,4 @@ services:
         arguments:
             - '@akeneo_measure.measure_converter'
             - '@pim_catalog.builder.entity_with_values'
+            - '@pim_catalog.repository.cached_attribute'

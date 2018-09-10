@@ -6,6 +6,7 @@ use Akeneo\Channel\Component\Model\ChannelInterface;
 use Akeneo\Channel\Component\Model\LocaleInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ValueInterface;
 use Akeneo\Pim\Structure\Component\AttributeTypes;
+use Akeneo\Tool\Component\StorageUtils\Repository\CachedObjectRepositoryInterface;
 
 /**
  * Check if a media data is complete or not.
@@ -20,6 +21,14 @@ use Akeneo\Pim\Structure\Component\AttributeTypes;
  */
 class MediaCompleteChecker implements ValueCompleteCheckerInterface
 {
+    /** @var CachedObjectRepositoryInterface */
+    protected $attributeRepository;
+
+    public function __construct(CachedObjectRepositoryInterface $attributeRepository)
+    {
+        $this->attributeRepository = $attributeRepository;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -49,6 +58,8 @@ class MediaCompleteChecker implements ValueCompleteCheckerInterface
         ChannelInterface $channel,
         LocaleInterface $locale
     ) {
-        return AttributeTypes::BACKEND_TYPE_MEDIA === $value->getAttribute()->getBackendType();
+        $attribute = $this->attributeRepository->findOneByIdentifier($value->getAttributeCode());
+
+        return (null !== $attribute && AttributeTypes::BACKEND_TYPE_MEDIA === $attribute->getBackendType());
     }
 }

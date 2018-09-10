@@ -1267,8 +1267,7 @@ class FixturesContext extends BaseFixturesContext
         $this->getMainContext()->getSubcontext('hook')->clearUOW();
         foreach ($this->listToArray($products) as $identifier) {
             $value      = $this->getProductValue($identifier, strtolower($attribute));
-            $actualCode = $value instanceof OptionValueInterface && $value->getData()
-                ? $value->getData()->getCode() : null;
+            $actualCode = $value->getData();
             Assert::assertEquals($optionCode, $actualCode);
         }
     }
@@ -1286,13 +1285,7 @@ class FixturesContext extends BaseFixturesContext
         $this->getMainContext()->getSubcontext('hook')->clearUOW();
         foreach ($this->listToArray($products) as $identifier) {
             $productValue = $this->getProductValue($identifier, strtolower($attribute));
-            $options      = $productValue->getData();
-            $optionCodes  = array_map(
-                function ($option) {
-                    return $option->getCode();
-                },
-                $options
-            );
+            $optionCodes  = $productValue->getData();
 
             $values = array_map(
                 function ($row) {
@@ -1302,7 +1295,7 @@ class FixturesContext extends BaseFixturesContext
             );
             $values = array_filter($values);
 
-            Assert::assertEquals(count($values), count($options));
+            Assert::assertEquals(count($values), count($optionCodes));
             foreach ($values as $value) {
                 Assert::assertContains(
                     $value,
@@ -1505,6 +1498,8 @@ class FixturesContext extends BaseFixturesContext
                     Assert::assertEquals($value, $price->getData());
                 } elseif ('date' === $attribute->getBackendType()) {
                     Assert::assertEquals($value, $productValue->getData()->format('Y-m-d'));
+                } elseif ('option' === $attribute->getBackendType() || 'options' === $attribute->getBackendType()) {
+                    Assert::assertEquals($value, (string) $productValue->getData());
                 } else {
                     Assert::assertEquals($value, (string) $productValue);
                 }

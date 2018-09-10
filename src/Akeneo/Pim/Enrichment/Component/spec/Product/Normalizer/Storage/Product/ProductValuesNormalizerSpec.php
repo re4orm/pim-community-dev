@@ -36,10 +36,7 @@ class ProductValuesNormalizerSpec extends ObjectBehavior
 
     function it_supports_storage_format_and_collection_values()
     {
-        $attribute = new Attribute();
-        $attribute->setCode('attribute');
-        $attribute->setBackendType('text');
-        $realValue = new ScalarValue($attribute, null, null, null);
+        $realValue = ScalarValue::value('attribute', null);
 
         $valuesCollection = new ValueCollection([$realValue]);
         $valuesArray = [$realValue];
@@ -64,7 +61,6 @@ class ProductValuesNormalizerSpec extends ObjectBehavior
         ValueInterface $descriptionEcommerceFrValue,
         ValueInterface $descriptionEcommerceEnValue,
         ValueInterface $descriptionPrintFrValue,
-        AttributeInterface $descriptionAttribute,
         ValueCollectionInterface $values,
         \ArrayIterator $valuesIterator
     ) {
@@ -79,13 +75,10 @@ class ProductValuesNormalizerSpec extends ObjectBehavior
         );
         $valuesIterator->next()->shouldBeCalled();
 
-        $textValue->getAttribute()->willReturn($textAttribute);
-        $descriptionEcommerceFrValue->getAttribute()->willReturn($descriptionAttribute);
-        $descriptionEcommerceEnValue->getAttribute()->willReturn($descriptionAttribute);
-        $descriptionPrintFrValue->getAttribute()->willReturn($descriptionAttribute);
-
-        $textAttribute->getCode()->willReturn('text');
-        $descriptionAttribute->getCode()->willReturn('description');
+        $textValue->getAttributeCode()->willReturn('text');
+        $descriptionEcommerceFrValue->getAttributeCode()->willReturn('description');
+        $descriptionEcommerceEnValue->getAttributeCode()->willReturn('description');
+        $descriptionPrintFrValue->getAttributeCode()->willReturn('description');
 
         $rawTextValue = [];
         $rawTextValue['text']['<all_channels>']['<all_locales>'] = 'foo';
