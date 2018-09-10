@@ -46,17 +46,22 @@ class ReferenceDataCollectionValue extends AbstractValue implements
      */
     public function __toString(): string
     {
-        return $this->data !== null ? implode(', ', $codes) : '';
+        $refDataStrings = [];
+        foreach ($this->data as $refDataCode) {
+            $refDataStrings[] = '['.$refDataCode.']';
+        }
+
+        return implode(', ', $refDataStrings);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function isEqual(ValueInterface $value)
+    public function isEqual(ValueInterface $value): bool
     {
         if (!$value instanceof ReferenceDataCollectionValueInterface ||
-            $this->getScope() !== $value->getScope() ||
-            $this->getLocale() !== $value->getLocale()) {
+            $this->getScopeCode() !== $value->getScopeCode() ||
+            $this->getLocaleCode() !== $value->getLocaleCode()) {
             return false;
         }
 

@@ -17,67 +17,25 @@ use Akeneo\Tool\Component\StorageUtils\Exception\InvalidPropertyTypeException;
  * @copyright 2017 Akeneo SAS (http://www.akeneo.com)
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
-class PriceCollectionValueFactory implements ValueFactoryInterface
+class PriceCollectionValueFactory extends AbstractValueFactory
 {
     /** @var PriceFactory */
     protected $priceFactory;
 
-    /** @var string */
-    protected $productValueClass;
-
-    /** @var string */
-    protected $supportedAttributeType;
-
-    /**
-     * @param PriceFactory $priceFactory
-     * @param string       $productValueClass
-     * @param string       $supportedAttributeType
-     */
     public function __construct(PriceFactory $priceFactory, $productValueClass, $supportedAttributeType)
     {
+        parent::__construct($productValueClass, $supportedAttributeType);
+
         $this->priceFactory = $priceFactory;
-        $this->productValueClass = $productValueClass;
-        $this->supportedAttributeType = $supportedAttributeType;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function create(AttributeInterface $attribute, $channelCode, $localeCode, $data)
+    protected function prepareData(AttributeInterface $attribute, $data)
     {
-        $this->checkData($attribute, $data);
-
         if (null === $data) {
             $data = [];
-        }
-
-        $value = new $this->productValueClass(
-            $attribute, $channelCode, $localeCode, $this->getPrices($attribute, $data)
-        );
-
-        return $value;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function supports($attributeType)
-    {
-        return $attributeType === $this->supportedAttributeType;
-    }
-
-    /**
-     * Checks if data are valid.
-     *
-     * @param AttributeInterface $attribute
-     * @param mixed              $data
-     *
-     * @throws InvalidPropertyTypeException
-     */
-    protected function checkData(AttributeInterface $attribute, $data)
-    {
-        if (null === $data || [] === $data) {
-            return;
         }
 
         if (!is_array($data)) {
@@ -115,6 +73,7 @@ class PriceCollectionValueFactory implements ValueFactoryInterface
                 );
             }
         }
+        return $this->getPrices($attribute, $data);
     }
 
     /**

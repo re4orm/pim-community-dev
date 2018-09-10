@@ -61,8 +61,8 @@ class OptionsValue extends AbstractValue implements OptionsValueInterface
     {
         $optionStrings = [];
 
-        foreach ($this->data as $optionString) {
-            $optionStrings[] = '['.$optionString.']';
+        foreach ($this->data as $optionCode) {
+            $optionStrings[] = '['.$optionCode.']';
         }
 
         return implode(', ', $optionStrings);
