@@ -14,6 +14,21 @@ use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
 interface ValueInterface
 {
     /**
+     * Named constructor for non scopable, non localizable value
+     */
+    public static function scopableValue(string $attributeCode, $data, string $scopeCode): ValueInterface;
+
+    /**
+     * Named constructor for localizable, non scopable value
+     */
+    public static function localizableValue(string $attributeCode, $data, string $localeCode): ValueInterface;
+
+    /**
+     * Named constructor for scopable and localizable value
+     */
+    public static function scopableLocalizableValue(string $attributeCode, $data, string $scopeCode, string $localeCode): ValueInterface;
+
+    /**
      * Get data
      *
      * @return mixed
@@ -22,43 +37,39 @@ interface ValueInterface
 
     /**
      * Get attribute
-     *
-     * @return AttributeInterface
      */
-    public function getAttribute();
+    public function getAttributeCode(): string;
 
     /**
-     * Get used locale
-     *
-     * @return string
+     * Get used locale code
      */
-    public function getLocale();
+    public function getLocaleCode(): ?string;
+
+    /**
+     * Check if the value data is linked to a locale
+     */
+    public function isLocalizable(): bool;
 
     /**
      * Check if the value contains data
-     *
-     * @return bool
      */
-    public function hasData();
+    public function hasData(): bool;
 
     /**
      * Get used scope
-     *
-     * @return string $scope
      */
-    public function getScope();
+    public function getScopeCode(): ?string;
+
+    /**
+     * Check if the value data is linked to a scope
+     */
+    public function isScopable(): bool;
 
     /**
      * Checks that the product value is equal to another.
-     *
-     * @param ValueInterface $value
-     *
-     * @return bool
      */
-    public function isEqual(ValueInterface $value);
+    public function isEqual(ValueInterface $value): bool;
 
-    /**
-     * @return string
-     */
-    public function __toString();
+
+    public function __toString(): string;
 }

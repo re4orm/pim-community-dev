@@ -13,19 +13,65 @@ use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
  */
 abstract class AbstractValue implements ValueInterface
 {
-    /** @var AttributeInterface */
-    protected $attribute;
+    /** @var mixed */
+    protected $data;
 
-    /** @var string Locale code */
-    protected $locale;
+    /** @var string */
+    protected $attributeCode;
 
-    /** @var string Scope code */
-    protected $scope;
+    /** @var string */
+    protected $localeCode;
+
+    /** @var string */
+    protected $scopeCode;
+
+    /**
+     * Forbid external access to the default constructor to force usage of named constructors
+     */
+    protected function __construct(string $attributeCode, $data, ?string $scopeCode, ?string $localeCode)
+    {
+        $this->attributeCode = $attributeCode;
+        $this->data = $data;
+        $this->scopeCode = $scopeCode;
+        $this->localeCode = $localeCode;
+    }
+
+    /**
+     * Named constructor for non scopable, non localizable value
+     */
+    public static function value(string $attributeCode, $data): ValueInterface
+    {
+        return new static($attributeCode, $data, null, null);
+    }
+
+    /**
+     * Named constructor for scopable and non localizable value
+     */
+    public static function scopableValue(string $attributeCode, $data, string $scopeCode): ValueInterface
+    {
+        return new static($attributeCode, $data, $scopeCode, null);
+    }
+
+    /**
+     * Named constructor for localizable, non scopable value
+     */
+    public static function localizableValue(string $attributeCode, $data, string $localeCode): ValueInterface
+    {
+        return new static($attributeCode, $data, null, $localeCode);
+    }
+
+    /**
+     * Named constructor for scopable and localizable value
+     */
+    public static function scopableLocalizableValue(string $attributeCode, $data, string $scopeCode, string $localeCode): ValueInterface
+    {
+        return new static($attributeCode, $data, $scopeCode, $localeCode);
+    }
 
     /**
      * {@inheritdoc}
      */
-    public function hasData()
+    public function hasData(): bool
     {
         return !is_null($this->getData());
     }
@@ -33,25 +79,17 @@ abstract class AbstractValue implements ValueInterface
     /**
      * {@inheritdoc}
      */
-    public function getAttribute()
+    public function getAttributeCode(): string
     {
-        return $this->attribute;
+        return $this->attributeCode;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getLocale()
+    public function getLocaleCode(): ?string
     {
-        return $this->locale;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getScope()
-    {
-        return $this->scope;
+        return $this->localeCode;
     }
 
     /**
@@ -60,62 +98,26 @@ abstract class AbstractValue implements ValueInterface
     abstract public function isEqual(ValueInterface $value);
 
     /**
-     * Set attribute
-     *
-     * @param AttributeInterface $attribute
-     *
-     * @throws \LogicException
-     *
-     * @return ValueInterface
+     * {@inheritdoc}
      */
-    protected function setAttribute(AttributeInterface $attribute = null)
+    public function getScopeCode(): ?string
     {
-        if (is_object($this->attribute) && ($attribute != $this->attribute)) {
-            throw new \LogicException(
-                sprintf('An attribute (%s) has already been set for this value', $this->attribute->getCode())
-            );
-        }
-        $this->attribute = $attribute;
-
-        return $this;
+        return $this->scopeCode;
     }
 
     /**
-     * Set used scope code
-     *
-     * @param string $scope
+     * {@inheritdoc}
      */
-    protected function setScope($scope)
+    public function isLocalizable(): bool
     {
-        if ($scope && $this->getAttribute() && !$this->getAttribute()->isScopable()) {
-            $attributeCode = $this->getAttribute()->getCode();
-            throw new \LogicException(
-                "The product value cannot be scoped, see attribute '".$attributeCode."' configuration"
-            );
-        }
-
-        $this->scope = $scope;
+        return null !== $this->localeCode;
     }
 
     /**
-     * Set used locale code
-     *
-     * @param string $locale
+     * {@inheritdoc}
      */
-    protected function setLocale($locale)
+    public function isScopable(): bool
     {
-        $isProductValueNotLocalizableNeitherLocaleSpecific = $locale
-            && null !== $this->getAttribute()
-            && !$this->getAttribute()->isLocalizable()
-            && !$this->getAttribute()->isLocaleSpecific();
-
-        if ($isProductValueNotLocalizableNeitherLocaleSpecific) {
-            $attributeCode = $this->getAttribute()->getCode();
-            throw new \LogicException(
-                "The product value cannot be localized, see attribute '".$attributeCode."' configuration"
-            );
-        }
-
-        $this->locale = $locale;
+        return null !== $this->scopeCode;
     }
 }
