@@ -10,12 +10,14 @@ use Akeneo\Tool\Component\StorageUtils\Repository\CursorableRepositoryInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Type;
 use Pim\Bundle\DataGridBundle\Normalizer\IdEncoder;
+use Pim\Bundle\DataGridBundle\Storage\GetRowsFromIdentifiersQuery;
+use Pim\Bundle\DataGridBundle\Storage\GetRowsQueryParameters;
 
 /**
  * @copyright 2018 Akeneo SAS (http://www.akeneo.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class GetProductRowsFromIdentifiers implements CursorableRepositoryInterface
+class GetProductRowsFromIdentifiers implements GetRowsFromIdentifiersQuery
 {
     /** @var Connection */
     private $connection;
@@ -32,17 +34,17 @@ class GetProductRowsFromIdentifiers implements CursorableRepositoryInterface
     /**
      * @inheritDoc
      */
-    public function getItemsFromIdentifiers(array $identifiers)
+    public function fetch(array $identifiers, GetRowsQueryParameters $queryParameters): array
     {
         $valueCollections = $this->getValueCollection($identifiers);
 
         $rows = array_replace_recursive(
             $this->getProperties($identifiers),
-            $this->getAttributeAsLabel($identifiers, $valueCollections),
+            $this->getAttributeAsLabel($identifiers, $valueCollections, $queryParameters->channel(), $queryParameters->locale()),
             $this->getAttributeAsImage($identifiers, $valueCollections),
-            $this->getCompletenesses($identifiers),
-            $this->getFamilyLabels($identifiers),
-            $this->getGroups($identifiers),
+            $this->getCompletenesses($identifiers, $queryParameters->channel(), $queryParameters->locale()),
+            $this->getFamilyLabels($identifiers, $queryParameters->locale()),
+            $this->getGroups($identifiers, $queryParameters->locale()),
             $valueCollections
         );
 
@@ -136,12 +138,8 @@ SQL;
         return $result;
     }
 
-    private function getAttributeAsLabel(array $identifiers, array $valueCollections): array
+    private function getAttributeAsLabel(array $identifiers, array $valueCollections, string $channel, string $locale): array
     {
-        // TDOO: pass it in parameters
-        $channel = 'ecommerce';
-        $locale = 'en_US';
-
         $result = [];
         foreach ($identifiers as $identifier) {
             $result[$identifier]['label'] = null;
@@ -213,12 +211,8 @@ SQL;
         return $result;
     }
 
-    private function getCompletenesses(array $identifiers): array
+    private function getCompletenesses(array $identifiers, string $channel, string $locale): array
     {
-        // TODO: pass it in parameters
-        $channel = 'ecommerce';
-        $locale = 'en_US';
-
         $result = [];
         foreach ($identifiers as $identifier) {
             $result[$identifier]['completeness'] = null;
@@ -252,11 +246,8 @@ SQL;
         return $result;
     }
 
-    private function getFamilyLabels(array $identifiers): array
+    private function getFamilyLabels(array $identifiers, string $locale): array
     {
-        // TODO: pass it in parameters
-        $locale = 'en_US';
-
         $result = [];
         foreach ($identifiers as $identifier) {
             $result[$identifier]['family_label'] = null;
@@ -287,11 +278,8 @@ SQL;
         return $result;
     }
 
-    private function getGroups(array $identifiers): array
+    private function getGroups(array $identifiers, string $locale): array
     {
-        // TODO: pass it in parameters
-        $locale = 'en_US';
-
         $result = [];
         foreach ($identifiers as $identifier) {
             $result[$identifier]['groups'] = [];

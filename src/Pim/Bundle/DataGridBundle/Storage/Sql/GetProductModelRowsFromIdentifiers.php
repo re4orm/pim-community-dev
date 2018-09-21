@@ -5,20 +5,21 @@ declare(strict_types=1);
 namespace Pim\Bundle\DataGridBundle\Storage\Sql;
 
 use Akeneo\Pim\Enrichment\Component\Product\Model\ValueCollection;
-use Akeneo\Tool\Component\StorageUtils\Repository\CursorableRepositoryInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Grid\ReadModel;
 use Pim\Bundle\DataGridBundle\Normalizer\IdEncoder;
+use Pim\Bundle\DataGridBundle\Storage\GetRowsFromIdentifiersQuery;
+use Pim\Bundle\DataGridBundle\Storage\GetRowsQueryParameters;
 
 /**
  * @copyright 2018 Akeneo SAS (http://www.akeneo.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class GetProductModelRowsFromIdentifiers implements CursorableRepositoryInterface
+class GetProductModelRowsFromIdentifiers implements GetRowsFromIdentifiersQuery
 {
     /**
      * @inheritDoc
      */
-    public function getItemsFromIdentifiers(array $identifiers)
+    public function fetch(array $identifiers, GetRowsQueryParameters $queryParameters): array
     {
         $rows = [];
         foreach ($identifiers as $identifier) {
