@@ -72,7 +72,7 @@ class ProductNormalizer implements NormalizerInterface, NormalizerAwareInterface
         $data['technical_id'] = $product->technicalId();
         $data['search_id'] = $product->searchId();
         $data['is_checked'] = $product->checked();
-        $data['complete_variant_product'] = $product->isCompleteVariantProduct();
+        $data['complete_variant_product'] = $product->childrenCompleteness();
         $data['parent'] = $product->parent();
 
         return $data;

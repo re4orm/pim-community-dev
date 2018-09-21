@@ -65,7 +65,7 @@ class GetProductRowsFromIdentifiers implements GetRowsFromIdentifiersQuery
                 (int) $row['id'],
                 IdEncoder::encode(IdEncoder::PRODUCT_TYPE, (int) $row['id']),
                 true,
-                null,
+                [],
                 $row['product_model_code'],
                 $row['value_collection']
             );

@@ -53,8 +53,8 @@ class Row
     /** @var bool */
     private $checked;
 
-    /** @var null|bool */
-    private $completeVariantProduct;
+    /** @var array */
+    private $childrenCompleteness; // @todo rename/restructure ?
 
     /** @var null|string */
     private $parent;
@@ -66,7 +66,7 @@ class Row
      * @param string             $identifier
      * @param string             $family
      * @param string[]           $groups
-     * @param bool               $enabled
+     * @param bool|null          $enabled
      * @param \DateTimeInterface $created
      * @param \DateTimeInterface $updated
      * @param null|ScalarValue   $label
@@ -76,7 +76,7 @@ class Row
      * @param int                $technicalId
      * @param string             $searchId
      * @param bool               $checked
-     * @param bool|null          $completeVariantProduct
+     * @param array              $childrenCompleteness
      * @param null|string        $parent
      * @param ValueCollection    $values
      */
@@ -84,7 +84,7 @@ class Row
         string $identifier,
         string $family,
         array $groups,
-        bool $enabled,
+        ?bool $enabled,
         \DateTimeInterface $created,
         \DateTimeInterface $updated,
         ?ScalarValue $label,
@@ -94,7 +94,7 @@ class Row
         int $technicalId,
         string $searchId,
         ?bool $checked,
-        ?bool $completeVariantProduct,
+        array $childrenCompleteness,
         ?string $parent,
         ValueCollection $values
     ) {
@@ -111,7 +111,7 @@ class Row
         $this->technicalId = $technicalId;
         $this->searchId = $searchId;
         $this->checked = $checked;
-        $this->completeVariantProduct = $completeVariantProduct;
+        $this->childrenCompleteness = $childrenCompleteness;
         $this->parent = $parent;
         $this->values = $values;
     }
@@ -141,9 +141,9 @@ class Row
     }
 
     /**
-     * @return bool
+     * @return bool|null
      */
-    public function enabled(): bool
+    public function enabled(): ?bool
     {
         return $this->enabled;
     }
@@ -221,11 +221,11 @@ class Row
     }
 
     /**
-     * @return bool|null
+     * @return array
      */
-    public function isCompleteVariantProduct(): ?bool
+    public function childrenCompleteness(): array
     {
-        return $this->completeVariantProduct;
+        return $this->childrenCompleteness;
     }
 
     /**

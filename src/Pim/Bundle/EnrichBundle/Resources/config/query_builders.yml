@@ -92,7 +92,9 @@ services:
             - '@database_connection'
             - '@pim_catalog.factory.value_collection'
 
-
     akeneo.pim.enrichment.query.get_product_model_rows_from_identifiers:
         public: false
         class: 'Oro\Bundle\PimDataGridBundle\Storage\Sql\GetProductModelRowsFromIdentifiers'
+        arguments:
+            - '@database_connection'
+            - '@pim_catalog.factory.value_collection'
