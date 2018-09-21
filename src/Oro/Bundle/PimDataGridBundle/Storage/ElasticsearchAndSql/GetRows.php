@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Pim\Bundle\DataGridBundle\Storage\ElasticsearchAndSql;
+namespace Oro\Bundle\PimDataGridBundle\Storage\ElasticsearchAndSql;
 
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
-use Pim\Bundle\DataGridBundle\Storage\GetRowsFromIdentifiersQuery;
-use Pim\Bundle\DataGridBundle\Storage\GetRowsQuery;
-use Pim\Bundle\DataGridBundle\Storage\GetRowsQueryParameters;
+use Oro\Bundle\PimDataGridBundle\Storage\GetRowsFromIdentifiersQuery;
+use Oro\Bundle\PimDataGridBundle\Storage\GetRowsQuery;
+use Oro\Bundle\PimDataGridBundle\Storage\GetRowsQueryParameters;
 
 /**
  * @author    Laurent Petard <laurent.petard@akeneo.com>

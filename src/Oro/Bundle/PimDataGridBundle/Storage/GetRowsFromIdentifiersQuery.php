@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Pim\Bundle\DataGridBundle\Storage;
+namespace Oro\Bundle\PimDataGridBundle\Storage;
+
+use Pim\Bundle\DataGridBundle\Storage\Row;
 
 /**
  * @copyright 2018 Akeneo SAS (http://www.akeneo.com)

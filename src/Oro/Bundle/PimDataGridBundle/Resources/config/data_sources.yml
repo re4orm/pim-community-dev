@@ -124,7 +124,7 @@ services:
             - { name: oro_datagrid.datasource, type: pim_datasource_smart }
 
     pim_datagrid.datasource.product_and_product_model:
-        class: 'Pim\Bundle\DataGridBundle\Datasource\ProductRowDatasource'
+        class: 'Oro\Bundle\PimDataGridBundle\Datasource\ProductRowDatasource'
         arguments:
             - '@pim_catalog.object_manager.product'
             - '@akeneo.pim.enrichment.query.product_and_product_model_query_builder_from_size_factory.with_product_identifier_cursor'

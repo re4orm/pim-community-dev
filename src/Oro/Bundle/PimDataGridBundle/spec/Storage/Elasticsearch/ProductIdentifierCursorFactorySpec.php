@@ -1,6 +1,6 @@
 <?php
 
-namespace spec\Pim\Bundle\DataGridBundle\Storage\Elasticsearch;
+namespace spec\Oro\Bundle\PimDataGridBundle\Storage\Elasticsearch;
 
 use Akeneo\Pim\Enrichment\Bundle\Elasticsearch\IdentifierResult;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
@@ -8,7 +8,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
 use Akeneo\Tool\Bundle\ElasticsearchBundle\Client;
 use Akeneo\Tool\Component\StorageUtils\Cursor\CursorFactoryInterface;
 use PhpSpec\ObjectBehavior;
-use Pim\Bundle\DataGridBundle\Storage\Elasticsearch\ProductIdentifierCursor;
+use Oro\Bundle\PimDataGridBundle\Storage\Elasticsearch\ProductIdentifierCursor;
 
 class ProductIdentifierCursorFactorySpec extends ObjectBehavior
 {
@@ -27,6 +27,7 @@ class ProductIdentifierCursorFactorySpec extends ObjectBehavior
         $esQuery = [
             'sort'  => [],
             'query' => [],
+            '_source' => ['identifier']
         ];
 
         $options = [
@@ -37,10 +38,11 @@ class ProductIdentifierCursorFactorySpec extends ObjectBehavior
         $esClient->search(
             'pim_catalog_product',
             [
-                'sort'  => ['_uid' => 'asc'],
-                'query' => [],
-                'size'  => 25,
-                'from'  => 0
+                'sort'    => ['_uid' => 'asc'],
+                'query'   => [],
+                '_source' => ['identifier', 'document_type'],
+                'size'    => 25,
+                'from'    => 0
             ]
         )->willReturn(['hits' => [
             'total' => 42,

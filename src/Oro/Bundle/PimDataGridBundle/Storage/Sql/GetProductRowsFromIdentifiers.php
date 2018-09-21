@@ -2,16 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Pim\Bundle\DataGridBundle\Storage\Sql;
+namespace Oro\Bundle\PimDataGridBundle\Storage\Sql;
 
 use Akeneo\Pim\Enrichment\Component\Product\Factory\ValueCollectionFactoryInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Grid\ReadModel;
-use Akeneo\Tool\Component\StorageUtils\Repository\CursorableRepositoryInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Type;
-use Pim\Bundle\DataGridBundle\Normalizer\IdEncoder;
-use Pim\Bundle\DataGridBundle\Storage\GetRowsFromIdentifiersQuery;
-use Pim\Bundle\DataGridBundle\Storage\GetRowsQueryParameters;
+use Oro\Bundle\PimDataGridBundle\Normalizer\IdEncoder;
+use Oro\Bundle\PimDataGridBundle\Storage\GetRowsFromIdentifiersQuery;
+use Oro\Bundle\PimDataGridBundle\Storage\GetRowsQueryParameters;
 
 /**
  * @copyright 2018 Akeneo SAS (http://www.akeneo.com)

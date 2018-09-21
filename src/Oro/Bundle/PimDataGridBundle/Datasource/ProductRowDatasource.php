@@ -2,17 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Pim\Bundle\DataGridBundle\Datasource;
+namespace Oro\Bundle\PimDataGridBundle\Datasource;
 
 use Akeneo\Pim\Enrichment\Component\Product\Grid\ReadModel\Row;
 use Akeneo\Pim\Enrichment\Component\Product\Query\ProductQueryBuilderFactoryInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Query\ProductQueryBuilderInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Oro\Bundle\DataGridBundle\Datasource\ResultRecord;
-use Pim\Bundle\DataGridBundle\EventSubscriber\FilterEntityWithValuesSubscriber;
-use Pim\Bundle\DataGridBundle\Extension\Pager\PagerExtension;
-use Pim\Bundle\DataGridBundle\Storage\GetRowsQuery;
-use Pim\Bundle\DataGridBundle\Storage\GetRowsQueryParameters;
+use Oro\Bundle\PimDataGridBundle\EventSubscriber\FilterEntityWithValuesSubscriber;
+use Oro\Bundle\PimDataGridBundle\EventSubscriber\FilterEntityWithValuesSubscriberConfiguration;
+use Oro\Bundle\PimDataGridBundle\Extension\Pager\PagerExtension;
+use Oro\Bundle\PimDataGridBundle\Storage\GetRowsQuery;
+use Oro\Bundle\PimDataGridBundle\Storage\GetRowsQueryParameters;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
@@ -62,12 +63,17 @@ class ProductRowDatasource extends Datasource
      */
     public function getResults()
     {
+        $attributesToDisplay = $this->getAttributeCodesToDisplay();
+        $this->filterEntityWithValuesSubscriber->configure(
+            FilterEntityWithValuesSubscriberConfiguration::filterEntityValues($attributesToDisplay)
+        );
+
         $channel = $this->getConfiguration('scope_code');
         $locale = $this->getConfiguration('locale_code');
 
         $getRowsQueryParameters = new GetRowsQueryParameters(
             $this->pqb,
-            $this->getAttributeCodesToDisplay(),
+            $attributesToDisplay,
             $channel,
             $locale,
             0 // @todo get UserId

@@ -1,6 +1,6 @@
 <?php
 
-namespace spec\Pim\Bundle\DataGridBundle\Storage\Elasticsearch;
+namespace spec\Oro\Bundle\PimDataGridBundle\Storage\Elasticsearch;
 
 use Akeneo\Pim\Enrichment\Bundle\Elasticsearch\IdentifierResult;
 use Akeneo\Tool\Component\StorageUtils\Cursor\CursorInterface;

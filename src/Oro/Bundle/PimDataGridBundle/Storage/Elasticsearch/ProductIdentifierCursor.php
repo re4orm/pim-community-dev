@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Pim\Bundle\DataGridBundle\Storage\Elasticsearch;
+namespace Oro\Bundle\PimDataGridBundle\Storage\Elasticsearch;
 
 use Akeneo\Tool\Component\StorageUtils\Cursor\CursorInterface;
 

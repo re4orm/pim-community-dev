@@ -73,21 +73,21 @@ services:
 
     akeneo.pim.enrichment.factory.product_identifier_cursor:
         public: false
-        class: 'Pim\Bundle\DataGridBundle\Storage\Elasticsearch\ProductIdentifierCursorFactory'
+        class: 'Oro\Bundle\PimDataGridBundle\Storage\Elasticsearch\ProductIdentifierCursorFactory'
         arguments:
             - '@akeneo_elasticsearch.client.product_and_product_model'
             - 'pim_catalog_product'
 
     akeneo.pim.enrichment.query.product_grid.get_rows:
         public: false
-        class: 'Pim\Bundle\DataGridBundle\Storage\ElasticsearchAndSql\GetRows'
+        class: 'Oro\Bundle\PimDataGridBundle\Storage\ElasticsearchAndSql\GetRows'
         arguments:
             - '@akeneo.pim.enrichment.query.get_product_rows_from_identifiers'
             - '@akeneo.pim.enrichment.query.get_product_model_rows_from_identifiers'
 
     akeneo.pim.enrichment.query.get_product_rows_from_identifiers:
         public: false
-        class: 'Pim\Bundle\DataGridBundle\Storage\Sql\GetProductRowsFromIdentifiers'
+        class: 'Oro\Bundle\PimDataGridBundle\Storage\Sql\GetProductRowsFromIdentifiers'
         arguments:
             - '@database_connection'
             - '@pim_catalog.factory.value_collection'
@@ -95,4 +95,4 @@ services:
 
     akeneo.pim.enrichment.query.get_product_model_rows_from_identifiers:
         public: false
-        class: 'Pim\Bundle\DataGridBundle\Storage\Sql\GetProductModelRowsFromIdentifiers'
+        class: 'Oro\Bundle\PimDataGridBundle\Storage\Sql\GetProductModelRowsFromIdentifiers'

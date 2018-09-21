@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Pim\Bundle\DataGridBundle\Storage;
+namespace Oro\Bundle\PimDataGridBundle\Storage;
 
 use Akeneo\Pim\Enrichment\Component\Product\Grid\ReadModel\Row;
 
