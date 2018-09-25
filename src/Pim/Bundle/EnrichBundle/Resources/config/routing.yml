@@ -26,6 +26,10 @@ categorytree:
     resource: '@PimEnrichBundle/Resources/config/routing/categorytree.yml'
     prefix: /enrich/product-category-tree
 
+product_grid_filter:
+    resource: '@PimEnrichBundle/Resources/config/routing/product_grid_filter.yml'
+    prefix: /enrich/product-grid-filter
+
 product:
     resource: '@PimEnrichBundle/Resources/config/routing/product.yml'
     prefix: /enrich/product
