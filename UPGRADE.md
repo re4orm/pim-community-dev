@@ -912,3 +912,9 @@ find ./src/ -type f -print0 | xargs -0 sed -i 's/Pim\\Component\\CatalogVolumeMo
 find ./src/ -type f -print0 | xargs -0 sed -i 's/Pim\\Bundle\\DataGridBundle/Oro\\Bundle\\PimDataGridBundle/g'
 find ./src/ -type f -print0 | xargs -0 sed -i 's/Pim\\Bundle\\FilterBundle\\Filter\\CompletenessFilter/Oro\\Bundle\\PimFilterBundle\\Filter\\ProductCompletenessFilter/g'
 find ./src/ -type f -print0 | xargs -0 sed -i 's/Pim\\Bundle\\FilterBundle/Oro\\Bundle\\PimFilterBundle/g'
+
+find ./src/ -type f -print0 | xargs -0 sed -i 's/\(UserContext.[gs]et(['\''\"'']\)uiLocale/\1user_default_locale/gi'
+find ./src/ -type f -print0 | xargs -0 sed -i 's/\(UserContext.[gs]et(['\''\"'']\)catalogLocale/\1catalog_default_locale/gi'
+find ./src/ -type f -print0 | xargs -0 sed -i 's/\(UserContext.[gs]et(['\''\"'']\)catalogScope/\1catalog_default_scope/gi'
+find ./src/ -type f -print0 | xargs -0 sed -i 's/\(UserContext.[gs]et(['\''\"'']\)firstName/\1first_name/gi'
+find ./src/ -type f -print0 | xargs -0 sed -i 's/\(UserContext.[gs]et(['\''\"'']\)lastName/\1last_name/gi'
