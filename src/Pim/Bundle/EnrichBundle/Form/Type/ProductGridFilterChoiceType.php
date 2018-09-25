@@ -1,5 +1,7 @@
 <?php
 
+// TODO To delete
+
 namespace Pim\Bundle\EnrichBundle\Form\Type;
 
 use Oro\Bundle\DataGridBundle\Datagrid\Manager;
