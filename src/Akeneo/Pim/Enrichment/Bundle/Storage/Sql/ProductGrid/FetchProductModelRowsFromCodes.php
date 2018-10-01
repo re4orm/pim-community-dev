@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Akeneo\Pim\Enrichment\Bundle\Storage\Sql\ProductGrid;
 
 use Akeneo\Pim\Enrichment\Component\Product\Factory\ValueCollectionFactoryInterface;
-use Akeneo\Pim\Enrichment\Component\Product\Grid\Query\GetRowsQueryParameters;
+use Akeneo\Pim\Enrichment\Component\Product\Grid\Query\FetchProductAndProductModelRowsParameters;
 use Akeneo\Pim\Enrichment\Component\Product\Grid\ReadModel;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Type;
@@ -28,7 +28,7 @@ final class FetchProductModelRowsFromCodes
         $this->valueCollectionFactory = $valueCollectionFactory;
     }
 
-    public function __invoke(array $codes, GetRowsQueryParameters $queryParameters): array
+    public function __invoke(array $codes, FetchProductAndProductModelRowsParameters $queryParameters): array
     {
         $valueCollections = $this->getValueCollection($codes);
 

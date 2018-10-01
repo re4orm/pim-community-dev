@@ -78,22 +78,19 @@ services:
             - '@akeneo_elasticsearch.client.product_and_product_model'
             - 'pim_catalog_product'
 
-    akeneo.pim.enrichment.query.product_grid.get_rows:
-        public: false
-        class: 'Oro\Bundle\PimDataGridBundle\Storage\ElasticsearchAndSql\GetRows'
+    akeneo.pim.enrichment.product.grid.query.fetch_product_and_product_model_rows:
+        class: 'Akeneo\Pim\Enrichment\Bundle\Storage\ElasticsearchAndSql\ProductGrid\FetchProductAndProductModelRows'
         arguments:
-            - '@akeneo.pim.enrichment.query.get_product_rows_from_identifiers'
-            - '@akeneo.pim.enrichment.query.get_product_model_rows_from_identifiers'
+            - '@akeneo.pim.enrichment.product.grid.query.fetch_product_rows_from_identifiers'
+            - '@akeneo.pim.enrichment.product.grid.query.fetch_product_model_rows_from_codes'
 
-    akeneo.pim.enrichment.product.grid.query.get_product_model_rows_from_identifiers:
-        public: false
+    akeneo.pim.enrichment.product.grid.query.fetch_product_model_rows_from_codes:
         class: 'Akeneo\Pim\Enrichment\Bundle\Storage\Sql\ProductGrid\FetchProductModelRowsFromCodes'
         arguments:
             - '@database_connection'
             - '@pim_catalog.factory.value_collection'
 
-    akeneo.pim.enrichment.product.grid.query.get_product_rows_from_identifiers:
-        public: false
+    akeneo.pim.enrichment.product.grid.query.fetch_product_rows_from_identifiers:
         class: 'Akeneo\Pim\Enrichment\Bundle\Storage\Sql\ProductGrid\FetchProductRowsFromIdentifiers'
         arguments:
             - '@database_connection'

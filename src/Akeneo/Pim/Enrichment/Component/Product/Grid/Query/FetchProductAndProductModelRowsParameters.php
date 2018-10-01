@@ -18,19 +18,19 @@ use Akeneo\Pim\Enrichment\Component\Product\Query\ProductQueryBuilderInterface;
  * @copyright 2018 Akeneo SAS (http://www.akeneo.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class GetRowsQueryParameters
+final class FetchProductAndProductModelRowsParameters
 {
     /** @var ProductQueryBuilderInterface */
     private $productQueryBuilder;
 
     /** @var array */
-    private $attributes;
+    private $attributeCodes;
 
     /** @var string */
-    private $channel;
+    private $channelCode;
 
     /** @var string */
-    private $locale;
+    private $localeCode;
 
     /** @var int */
     private $userId;
@@ -51,9 +51,9 @@ class GetRowsQueryParameters
     ) {
 
         $this->productQueryBuilder = $productQueryBuilder;
-        $this->attributes = $attributes;
-        $this->channel = $channel;
-        $this->locale = $locale;
+        $this->attributeCodes = $attributes;
+        $this->channelCode = $channel;
+        $this->localeCode = $locale;
         $this->userId = $userId;
     }
 
@@ -68,25 +68,25 @@ class GetRowsQueryParameters
     /**
      * @return array
      */
-    public function attributes(): array
+    public function attributeCodes(): array
     {
-        return $this->attributes;
+        return $this->attributeCodes;
     }
 
     /**
      * @return string
      */
-    public function channel(): string
+    public function channelCode(): string
     {
-        return $this->channel;
+        return $this->channelCode;
     }
 
     /**
      * @return string
      */
-    public function locale(): string
+    public function localeCode(): string
     {
-        return $this->locale;
+        return $this->localeCode;
     }
 
     /**

@@ -16,12 +16,12 @@ use Akeneo\Pim\Enrichment\Component\Product\Grid\ReadModel\Rows;
  * @copyright 2018 Akeneo SAS (http://www.akeneo.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-interface FetchProductAndProductModelRowsQuery
+interface FetchProductAndProductModelRows
 {
     /**
-     * @param GetRowsQueryParameters $queryParameters
+     * @param FetchProductAndProductModelRowsParameters $queryParameters
      *
      * @return Rows
      */
-    public function __invoke(GetRowsQueryParameters $queryParameters): Rows;
+    public function __invoke(FetchProductAndProductModelRowsParameters $queryParameters): Rows;
 }

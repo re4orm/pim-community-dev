@@ -65,7 +65,7 @@ final class Row
 
     /**
      * @param string             $identifier
-     * @param string             $family
+     * @param null|string        $family
      * @param string[]           $groups
      * @param bool|null          $enabled
      * @param \DateTimeInterface $created
@@ -83,7 +83,7 @@ final class Row
      */
     private function __construct(
         string $identifier,
-        string $family,
+        ?string $family,
         array $groups,
         ?bool $enabled,
         \DateTimeInterface $created,
@@ -119,7 +119,7 @@ final class Row
 
     public static function fromProduct(
         string $identifier,
-        string $family,
+        ?string $family,
         array $groups,
         ?bool $enabled,
         \DateTimeInterface $created,
@@ -153,7 +153,7 @@ final class Row
 
     public static function fromProductModel(
         string $code,
-        string $family,
+        ?string $family,
         \DateTimeInterface $created,
         \DateTimeInterface $updated,
         ?ScalarValue $label,
@@ -192,9 +192,9 @@ final class Row
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function family(): string
+    public function family(): ?string
     {
         return $this->family;
     }

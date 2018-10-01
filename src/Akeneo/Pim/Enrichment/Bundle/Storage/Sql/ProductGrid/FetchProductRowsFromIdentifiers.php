@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Akeneo\Pim\Enrichment\Bundle\Storage\Sql\ProductGrid;
 
 use Akeneo\Pim\Enrichment\Component\Product\Factory\ValueCollectionFactoryInterface;
+use Akeneo\Pim\Enrichment\Component\Product\Grid\Query\FetchProductAndProductModelRowsParameters;
 use Akeneo\Pim\Enrichment\Component\Product\Grid\ReadModel;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Type;
@@ -24,23 +25,35 @@ final class FetchProductRowsFromIdentifiers
     /** @var ValueCollectionFactoryInterface */
     private $valueCollectionFactory;
 
+    /**
+     * @param Connection                      $connection
+     * @param ValueCollectionFactoryInterface $valueCollectionFactory
+     */
     public function __construct(Connection $connection, ValueCollectionFactoryInterface $valueCollectionFactory)
     {
         $this->connection = $connection;
         $this->valueCollectionFactory = $valueCollectionFactory;
     }
 
-    public function __invoke(array $identifiers, GetRowsQueryParameters $queryParameters): array
+    /**
+     * @param array  $identifiers
+     * @param array  $attributeCodes
+     * @param string $localeCode
+     * @param string $channelCode
+     *
+     * @return ReadModel\Row[]
+     */
+    public function __invoke(array $identifiers, array $attributeCodes, string $localeCode, string $channelCode): array
     {
         $valueCollections = $this->getValueCollection($identifiers);
 
         $rows = array_replace_recursive(
             $this->getProperties($identifiers),
-            $this->getAttributeAsLabel($identifiers, $valueCollections, $queryParameters->channel(), $queryParameters->locale()),
+            $this->getAttributeAsLabel($identifiers, $valueCollections, $channelCode, $localeCode),
             $this->getAttributeAsImage($identifiers, $valueCollections),
-            $this->getCompletenesses($identifiers, $queryParameters->channel(), $queryParameters->locale()),
-            $this->getFamilyLabels($identifiers, $queryParameters->locale()),
-            $this->getGroups($identifiers, $queryParameters->locale()),
+            $this->getCompletenesses($identifiers, $channelCode, $localeCode),
+            $this->getFamilyLabels($identifiers, $localeCode),
+            $this->getGroups($identifiers, $localeCode),
             $valueCollections
         );
 
@@ -101,7 +114,6 @@ SQL;
 
     private function getValueCollection(array $identifiers): array
     {
-        // TODO : handle recursivity when level > 2?
         $sql = <<<SQL
             SELECT 
                 p.identifier,
@@ -130,7 +142,7 @@ SQL;
         return $result;
     }
 
-    private function getAttributeAsLabel(array $identifiers, array $valueCollections, string $channel, string $locale): array
+    private function getAttributeAsLabel(array $identifiers, array $valueCollections, string $channelCode, string $localeCode): array
     {
         $result = [];
         foreach ($identifiers as $identifier) {
@@ -160,8 +172,8 @@ SQL;
         foreach ($rows as $row) {
             $label = $valueCollections[$row['identifier']]['value_collection']->getByCodes(
                 $row['label_code'],
-                $row['is_scopable'] ? $channel : null,
-                $row['is_localizable'] ? $locale : null
+                $row['is_scopable'] ? $channelCode : null,
+                $row['is_localizable'] ? $localeCode : null
             );
 
             $result[$row['identifier']]['label'] = $label ?? null;
@@ -203,7 +215,7 @@ SQL;
         return $result;
     }
 
-    private function getCompletenesses(array $identifiers, string $channel, string $locale): array
+    private function getCompletenesses(array $identifiers, string $channelCode, string $localeCode): array
     {
         $result = [];
         foreach ($identifiers as $identifier) {
@@ -227,7 +239,7 @@ SQL;
 
         $rows = $this->connection->executeQuery(
             $sql,
-            ['identifiers' => $identifiers, 'locale_code' => $locale, 'channel_code' => $channel],
+            ['identifiers' => $identifiers, 'locale_code' => $localeCode, 'channel_code' => $channelCode],
             ['identifiers' => \Doctrine\DBAL\Connection::PARAM_STR_ARRAY]
         )->fetchAll();
 
@@ -238,7 +250,7 @@ SQL;
         return $result;
     }
 
-    private function getFamilyLabels(array $identifiers, string $locale): array
+    private function getFamilyLabels(array $identifiers, string $localeCode): array
     {
         $result = [];
         foreach ($identifiers as $identifier) {
@@ -259,7 +271,7 @@ SQL;
 
         $rows = $this->connection->executeQuery(
             $sql,
-            ['identifiers' => $identifiers, 'locale_code' => $locale],
+            ['identifiers' => $identifiers, 'locale_code' => $localeCode],
             ['identifiers' => \Doctrine\DBAL\Connection::PARAM_STR_ARRAY]
         )->fetchAll();
 
@@ -270,7 +282,7 @@ SQL;
         return $result;
     }
 
-    private function getGroups(array $identifiers, string $locale): array
+    private function getGroups(array $identifiers, string $localeCode): array
     {
         $result = [];
         foreach ($identifiers as $identifier) {
@@ -294,7 +306,7 @@ SQL;
 
         $rows = $this->connection->executeQuery(
             $sql,
-            ['identifiers' => $identifiers, 'locale_code' => $locale],
+            ['identifiers' => $identifiers, 'locale_code' => $localeCode],
             ['identifiers' => \Doctrine\DBAL\Connection::PARAM_STR_ARRAY]
         )->fetchAll();
 

@@ -14,7 +14,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Grid\Query;
  * @copyright 2018 Akeneo SAS (http://www.akeneo.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-final class FetchProductAndProductModelRows implements Query\FetchProductAndProductModelRowsQuery
+final class FetchProductAndProductModelRows implements Query\FetchProductAndProductModelRows
 {
     /** @var Sql\ProductGrid\FetchProductRowsFromIdentifiers */
     private $fetchProductRowsFromIdentifiers;
@@ -38,7 +38,7 @@ final class FetchProductAndProductModelRows implements Query\FetchProductAndProd
     /**
      * {@inheritdoc}
      */
-    public function __invoke(Query\GetRowsQueryParameters $queryParameters): Rows
+    public function __invoke(Query\FetchProductAndProductModelRowsParameters $queryParameters): Rows
     {
         $productAndProductModelIdentifiersCursor = $queryParameters->productQueryBuilder()->execute();
         $identifiers = iterator_to_array($productAndProductModelIdentifiersCursor);
