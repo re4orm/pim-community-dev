@@ -7,12 +7,13 @@ namespace Akeneo\Pim\Enrichment\Component\Product\Grid\ReadModel;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ValueCollection;
 use Akeneo\Pim\Enrichment\Component\Product\Value\MediaValue;
 use Akeneo\Pim\Enrichment\Component\Product\Value\ScalarValue;
+use Oro\Bundle\PimDataGridBundle\Normalizer\IdEncoder;
 
 /**
  * @copyright 2018 Akeneo SAS (http://www.akeneo.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class Row
+final class Row
 {
     /** @var string */
     private $identifier;
@@ -80,7 +81,7 @@ class Row
      * @param null|string        $parent
      * @param ValueCollection    $values
      */
-    public function __construct(
+    private function __construct(
         string $identifier,
         string $family,
         array $groups,
@@ -114,6 +115,72 @@ class Row
         $this->childrenCompleteness = $childrenCompleteness;
         $this->parent = $parent;
         $this->values = $values;
+    }
+
+    public static function fromProduct(
+        string $identifier,
+        string $family,
+        array $groups,
+        ?bool $enabled,
+        \DateTimeInterface $created,
+        \DateTimeInterface $updated,
+        ?ScalarValue $label,
+        ?MediaValue $image,
+        ?int $completeness,
+        int $technicalId,
+        ?string $parent,
+        ValueCollection $values
+    ):self {
+        return new self(
+            $identifier,
+            $family,
+            $groups,
+            $enabled,
+            $created,
+            $updated,
+            $label,
+            $image,
+            $completeness,
+            IdEncoder::PRODUCT_TYPE,
+            $technicalId,
+            IdEncoder::encode(IdEncoder::PRODUCT_TYPE, $technicalId),
+            true,
+            [],
+            $parent,
+            $values
+        );
+    }
+
+    public static function fromProductModel(
+        string $code,
+        string $family,
+        \DateTimeInterface $created,
+        \DateTimeInterface $updated,
+        ?ScalarValue $label,
+        ?MediaValue $image,
+        int $technicalId,
+        array $childrenCompleteness,
+        ?string $parent,
+        ValueCollection $values
+    ):self {
+        return new self(
+            $code,
+            $family,
+            [],
+            false,
+            $created,
+            $updated,
+            $label,
+            $image,
+            null,
+            IdEncoder::PRODUCT_MODEL_TYPE,
+            $technicalId,
+            IdEncoder::encode(IdEncoder::PRODUCT_MODEL_TYPE, $technicalId),
+            true,
+            $childrenCompleteness,
+            $parent,
+            $values
+        );
     }
 
     /**

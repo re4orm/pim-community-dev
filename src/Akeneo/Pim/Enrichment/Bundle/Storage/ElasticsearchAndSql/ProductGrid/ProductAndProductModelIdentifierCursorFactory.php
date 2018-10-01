@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Oro\Bundle\PimDataGridBundle\Storage\Elasticsearch;
+namespace Akeneo\Pim\Enrichment\Bundle\Storage\ElasticsearchAndSql\ProductGrid;
 
 use Akeneo\Pim\Enrichment\Bundle\Elasticsearch\IdentifierResult;
 use Akeneo\Tool\Bundle\ElasticsearchBundle\Client;
@@ -10,11 +10,10 @@ use Akeneo\Tool\Component\StorageUtils\Cursor\CursorFactoryInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * @author    Laurent Petard <laurent.petard@akeneo.com>
  * @copyright 2018 Akeneo SAS (http://www.akeneo.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class ProductIdentifierCursorFactory implements CursorFactoryInterface
+class ProductAndProductModelIdentifierCursorFactory implements CursorFactoryInterface
 {
     /** @var Client */
     private $esClient;
@@ -25,8 +24,6 @@ class ProductIdentifierCursorFactory implements CursorFactoryInterface
     /**
      * @param Client $esClient
      * @param string $indexType
-     *
-     * @todo dose $indexType really needs to be configurable ?
      */
     public function __construct(Client $esClient, string $indexType)
     {
@@ -55,7 +52,7 @@ class ProductIdentifierCursorFactory implements CursorFactoryInterface
             $identifiers[] = new IdentifierResult($hit['_source']['identifier'], $hit['_source']['document_type']);
         }
 
-        return new ProductIdentifierCursor($identifiers, $totalCount);
+        return new ProductAndProductModelIdentifierCursor($identifiers, $totalCount);
     }
 
     /**

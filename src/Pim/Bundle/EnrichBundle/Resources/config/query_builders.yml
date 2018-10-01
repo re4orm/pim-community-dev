@@ -34,9 +34,9 @@ services:
             - '@pim_enrich.query.product_query_builder_from_size_factory.with_product_and_product_model_from_size_cursor'
 
     akeneo.pim.enrichment.query.product_and_product_model_query_builder_from_size_factory.with_product_identifier_cursor:
-        class: '%pim_catalog.query.elasticsearch.product_and_model_query_builder_factory.class%'
+        class: 'Akeneo\Pim\Enrichment\Bundle\Elasticsearch\ProductAndProductModelQueryBuilderFactory'
         arguments:
-            - '%pim_enrich.query.product_and_product_model_query_builder.class%'
+            - 'Pim\Bundle\EnrichBundle\ProductQueryBuilder\ProductAndProductModelQueryBuilder'
             - '@akeneo.pim.enrichment.query.product_query_builder_from_size_factory.with_product_identifier_cursor'
 
     pim_enrich.query.product_query_builder_from_size_factory.with_product_and_product_model_from_size_cursor:
@@ -52,9 +52,9 @@ services:
 
     akeneo.pim.enrichment.query.product_query_builder_from_size_factory.with_product_identifier_cursor:
         public: false
-        class: '%pim_catalog.query.elasticsearch.product_query_builder_factory.class%'
+        class: 'Akeneo\Pim\Enrichment\Bundle\Elasticsearch\ProductQueryBuilderFactory'
         arguments:
-            - '%pim_catalog.query.product_query_builder.class%'
+            - 'Akeneo\Pim\Enrichment\Component\Product\Query\ProductQueryBuilder'
             - '@pim_catalog.repository.attribute'
             - '@pim_catalog.query.filter.product_and_product_model_registry'
             - '@pim_catalog.query.sorter.registry'
@@ -73,7 +73,7 @@ services:
 
     akeneo.pim.enrichment.factory.product_identifier_cursor:
         public: false
-        class: 'Oro\Bundle\PimDataGridBundle\Storage\Elasticsearch\ProductIdentifierCursorFactory'
+        class: 'Akeneo\Pim\Enrichment\Bundle\Storage\ElasticsearchAndSql\ProductGrid\ProductAndProductModelIdentifierCursorFactory'
         arguments:
             - '@akeneo_elasticsearch.client.product_and_product_model'
             - 'pim_catalog_product'
@@ -85,16 +85,16 @@ services:
             - '@akeneo.pim.enrichment.query.get_product_rows_from_identifiers'
             - '@akeneo.pim.enrichment.query.get_product_model_rows_from_identifiers'
 
-    akeneo.pim.enrichment.query.get_product_rows_from_identifiers:
+    akeneo.pim.enrichment.product.grid.query.get_product_model_rows_from_identifiers:
         public: false
-        class: 'Oro\Bundle\PimDataGridBundle\Storage\Sql\GetProductRowsFromIdentifiers'
+        class: 'Akeneo\Pim\Enrichment\Bundle\Storage\Sql\ProductGrid\FetchProductModelRowsFromCodes'
         arguments:
             - '@database_connection'
             - '@pim_catalog.factory.value_collection'
 
-    akeneo.pim.enrichment.query.get_product_model_rows_from_identifiers:
+    akeneo.pim.enrichment.product.grid.query.get_product_rows_from_identifiers:
         public: false
-        class: 'Oro\Bundle\PimDataGridBundle\Storage\Sql\GetProductModelRowsFromIdentifiers'
+        class: 'Akeneo\Pim\Enrichment\Bundle\Storage\Sql\ProductGrid\FetchProductRowsFromIdentifiers'
         arguments:
             - '@database_connection'
             - '@pim_catalog.factory.value_collection'
