@@ -5,13 +5,9 @@ declare(strict_types=1);
 namespace Akeneo\Pim\Enrichment\Bundle\Storage\Sql\ProductGrid;
 
 use Akeneo\Pim\Enrichment\Component\Product\Factory\ValueCollectionFactoryInterface;
-use Akeneo\Pim\Enrichment\Component\Product\Grid\Query\FetchProductAndProductModelRowsParameters;
 use Akeneo\Pim\Enrichment\Component\Product\Grid\ReadModel;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Type;
-use Oro\Bundle\PimDataGridBundle\Normalizer\IdEncoder;
-use Oro\Bundle\PimDataGridBundle\Storage\GetRowsFromIdentifiersQuery;
-use Oro\Bundle\PimDataGridBundle\Storage\GetRowsQueryParameters;
 
 /**
  * @copyright 2018 Akeneo SAS (http://www.akeneo.com)
@@ -45,12 +41,12 @@ final class FetchProductRowsFromIdentifiers
      */
     public function __invoke(array $identifiers, array $attributeCodes, string $localeCode, string $channelCode): array
     {
-        $valueCollections = $this->getValueCollection($identifiers);
+        $valueCollections = $this->getValueCollection($identifiers, $attributeCodes);
 
         $rows = array_replace_recursive(
             $this->getProperties($identifiers),
-            $this->getAttributeAsLabel($identifiers, $valueCollections, $channelCode, $localeCode),
-            $this->getAttributeAsImage($identifiers, $valueCollections),
+            $this->getLabels($identifiers, $valueCollections, $channelCode, $localeCode),
+            $this->getImages($identifiers, $valueCollections),
             $this->getCompletenesses($identifiers, $channelCode, $localeCode),
             $this->getFamilyLabels($identifiers, $localeCode),
             $this->getGroups($identifiers, $localeCode),
@@ -112,16 +108,21 @@ SQL;
         return $result;
     }
 
-    private function getValueCollection(array $identifiers): array
+    private function getValueCollection(array $identifiers, array $attributeCodes): array
     {
         $sql = <<<SQL
             SELECT 
                 p.identifier,
+                a_label.code attribute_as_label_code,
+                a_image.code attribute_as_image_code,
                 JSON_MERGE(COALESCE(pm1.raw_values, '{}'), COALESCE(pm2.raw_values, '{}'), p.raw_values) as raw_values
             FROM
                 pim_catalog_product p
                 LEFT JOIN pim_catalog_product_model pm1 ON pm1.id = p.product_model_id
                 LEFT JOIN pim_catalog_product_model pm2 on pm2.id = pm1.parent_id
+                LEFT JOIN pim_catalog_family f ON f.id = p.family_id
+                LEFT JOIN pim_catalog_attribute a_label ON a_label.id = f.label_attribute_id
+                LEFT JOIN pim_catalog_attribute a_image ON a_image.id = f.image_attribute_id
             WHERE 
                 identifier IN (:identifiers)
 SQL;
@@ -134,15 +135,26 @@ SQL;
 
         $result = [];
         foreach ($rows as $row) {
+            $values = json_decode($row['raw_values'], true);
+            $attributeCodesToKeep = array_filter(
+                array_merge(
+                    $attributeCodes,
+                    [$row['attribute_as_label_code']],
+                    [$row['attribute_as_image_code']]
+                )
+            );
+
+            $filteredValues = array_intersect_key($values, array_flip($attributeCodesToKeep));
+
             $result[$row['identifier']]['value_collection'] = $this->valueCollectionFactory->createFromStorageFormat(
-                json_decode($row['raw_values'], true)
+                $filteredValues
             );
         }
 
         return $result;
     }
 
-    private function getAttributeAsLabel(array $identifiers, array $valueCollections, string $channelCode, string $localeCode): array
+    private function getLabels(array $identifiers, array $valueCollections, string $channelCode, string $localeCode): array
     {
         $result = [];
         foreach ($identifiers as $identifier) {
@@ -182,7 +194,7 @@ SQL;
         return $result;
     }
 
-    private function getAttributeAsImage(array $identifiers, array $valueCollections): array
+    private function getImages(array $identifiers, array $valueCollections): array
     {
         $result = [];
         foreach ($identifiers as $identifier) {
